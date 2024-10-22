@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clonar Repositorio') {
+            steps {
+                git 'https://github.com/Eduardopp20/pruebasunit-repositorio.git'
+            }
+        }
+        stage('Instalar Python y pip') {
+            steps {
+                sh 'sudo apt-get install -y python3 python3-pip'
+            }
+        }
+        stage('Instalar Dependencias') {
+            steps {
+                sh 'pip3 install pytest'
+            }
+        }
+        stage('Ejecutar Pruebas Unitarias') {
+            steps {
+                sh '''
+                    export PATH=$PATH:/var/lib/jenkins/.local/bin
+                    pytest test_calculadora.py
+                '''
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline completado'
+        }
+    }
+}
+
